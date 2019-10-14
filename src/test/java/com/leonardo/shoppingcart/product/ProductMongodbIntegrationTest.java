@@ -22,6 +22,7 @@ import static org.junit.Assert.assertNotNull;
 @DirtiesContext
 @Import(CustomConvertersConfig.class)
 public class ProductMongodbIntegrationTest {
+
     @Autowired
     private ProductRepository productRepository;
 

@@ -7,7 +7,6 @@ import org.springframework.data.convert.WritingConverter;
 import org.springframework.stereotype.Component;
 
 @WritingConverter
-@Component
 public class FastMoneyToLongConverter implements Converter<FastMoney, Document> {
 
     @Override
