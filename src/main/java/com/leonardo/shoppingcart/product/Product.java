@@ -1,21 +1,25 @@
 package com.leonardo.shoppingcart.product;
 
 import com.leonardo.shoppingcart.base.BaseDocument;
+import lombok.Data;
 import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 import org.javamoney.moneta.FastMoney;
-import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.mapping.Document;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
+@Data
+@Document
+@NoArgsConstructor
 public class Product extends BaseDocument<String> implements Serializable {
 
     private static final long serialVersionUID = -7087034090684719098L;
 
     @NotNull
     @NotBlank
-    @TextIndexed
     private String name;
 
     @NotNull
