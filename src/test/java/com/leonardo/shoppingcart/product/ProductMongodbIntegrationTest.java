@@ -1,12 +1,14 @@
 package com.leonardo.shoppingcart.product;
 
 import com.leonardo.shoppingcart.DemoApplication;
+import com.leonardo.shoppingcart.config.CustomConvertersConfig;
 import org.javamoney.moneta.FastMoney;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
+import org.springframework.context.annotation.Import;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -18,6 +20,7 @@ import static org.junit.Assert.assertNotNull;
 @DataMongoTest
 @RunWith(SpringRunner.class)
 @DirtiesContext
+@Import(CustomConvertersConfig.class)
 public class ProductMongodbIntegrationTest {
     @Autowired
     private ProductRepository productRepository;
