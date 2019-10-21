@@ -1,15 +1,20 @@
 package com.leonardo.shoppingcart.product;
 
-import com.leonardo.shoppingcart.base.BaseDocument;
-import lombok.Data;
-import lombok.EqualsAndHashCode;
-import lombok.NoArgsConstructor;
-import org.javamoney.moneta.FastMoney;
-import org.springframework.data.mongodb.core.mapping.Document;
+import java.io.Serializable;
 
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
-import java.io.Serializable;
+
+import com.leonardo.shoppingcart.base.BaseDocument;
+
+import org.javamoney.moneta.FastMoney;
+import org.springframework.data.mongodb.core.index.TextIndexed;
+import org.springframework.data.mongodb.core.mapping.Document;
+import org.springframework.data.mongodb.core.mapping.TextScore;
+
+import lombok.Data;
+import lombok.EqualsAndHashCode;
+import lombok.NoArgsConstructor;
 
 @Data
 @Document
@@ -20,11 +25,16 @@ public class Product extends BaseDocument<String> implements Serializable {
 
     @NotNull
     @NotBlank
+    @TextIndexed
     private String name;
 
     @NotNull
     @EqualsAndHashCode.Exclude
     private FastMoney price;
+
+    @TextScore
+    @EqualsAndHashCode.Exclude
+    private Float score;
 
     public Product(String name, FastMoney price) {
         this(null, name, price);

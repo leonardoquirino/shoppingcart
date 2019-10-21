@@ -1,7 +1,13 @@
 package com.leonardo.shoppingcart.product;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+
+import java.util.List;
+
 import com.leonardo.shoppingcart.DemoApplication;
 import com.leonardo.shoppingcart.config.CustomConvertersConfig;
+
 import org.javamoney.moneta.FastMoney;
 import org.junit.Assert;
 import org.junit.Test;
@@ -9,12 +15,10 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.data.mongo.DataMongoTest;
 import org.springframework.context.annotation.Import;
+import org.springframework.data.mongodb.core.query.TextCriteria;
 import org.springframework.test.annotation.DirtiesContext;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 
 @ContextConfiguration(classes = DemoApplication.class)
 @DataMongoTest
@@ -30,6 +34,7 @@ public class ProductMongodbIntegrationTest {
     public void insertProductTest() {
         Product product = new Product("Product Insert", FastMoney.of(4L, "EUR"));
         Product saved = productRepository.insert(product);
+        
         assertNotNull(saved.getId());
         assertNotNull(saved.getName());
         assertNotNull(saved.getPrice());
@@ -41,9 +46,12 @@ public class ProductMongodbIntegrationTest {
     public void deleteProductTest() {
         Product product = new Product("Product Insert", FastMoney.of(4L, "EUR"));
         Product saved = productRepository.insert(product);
+        
         assertNotNull(saved.getId());
+        
         String id = product.getId();
         productRepository.deleteById(id);
+        
         assertEquals(productRepository.existsById(id), Boolean.FALSE);
     }
 
@@ -51,20 +59,43 @@ public class ProductMongodbIntegrationTest {
     public void findByIdProductTest() {
         Product product = new Product("Product Insert", FastMoney.of(4L, "EUR"));
         Product saved = productRepository.insert(product);
+        
         assertNotNull(saved.getId());
+        
         String id = product.getId();
         product = productRepository.findById(id).get();
+        
         assertEquals(product, saved);
+    }
+
+    @Test
+    public void findByTextIdProductTest() {
+        Product product = new Product("Product Insert", FastMoney.of(4L, "EUR"));
+        Product saved = productRepository.insert(product);
+        
+        assertNotNull(saved.getId());
+
+        String incompleteName = "Product";
+        TextCriteria textCriteria =  TextCriteria.forDefaultLanguage().diacriticSensitive(Boolean.TRUE).matchingAny(incompleteName);
+        List<Product> productList = productRepository.findAllByOrderByScoreDesc(textCriteria);
+
+        assertEquals(1, productList.size());
+        assertEquals(product, productList.get(0));
     }
 
     @Test
     public void updateProductTest() {
         Product product = new Product("Product Insert", FastMoney.of(4L, "EUR"));
         Product saved = productRepository.insert(product);
+        
         Assert.assertNotNull(saved.getId());
+        
         FastMoney updatePrice = FastMoney.of(5L, "EUR");
         saved.setPrice(FastMoney.of(5L, "EUR"));
         saved = productRepository.save(saved);
+        
         Assert.assertTrue(saved.getPrice().equals(updatePrice));
     }
+
+    
 }
